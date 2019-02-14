@@ -4,4 +4,5 @@ include CHANGES
 
 include tox.ini
 
+recursive-include sphinxcontrib/devhelp/locales *
 recursive-include tests *
