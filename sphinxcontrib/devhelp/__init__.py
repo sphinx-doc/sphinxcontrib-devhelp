@@ -10,8 +10,7 @@
     :license: BSD, see LICENSE for details.
 """
 
-import gzip
-import re
+import codecs
 from os import path
 from typing import Any, Dict
 
@@ -19,7 +18,6 @@ from docutils import nodes
 from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.builders.html import StandaloneHTMLBuilder
-from sphinx.environment.adapters.indexentries import IndexEntries
 from sphinx.locale import get_translation
 from sphinx.util import logging
 from sphinx.util.nodes import NodeMatcher
@@ -78,11 +76,17 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         logger.info(__('dumping devhelp index...'))
 
         # Basic info
+
+        # TODO: author attrib
+        # TODO: language attrib
         root = etree.Element('book',
+                             xmlns='http://www.devhelp.net/book',
                              title=self.config.html_title,
                              name=self.config.project,
                              link="index.html",
-                             version=self.config.version)
+                             version=self.config.version,
+                             language='',
+                             author='')
         tree = etree.ElementTree(root)
 
         # TOC
@@ -109,37 +113,24 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         for node in tocdoc.traverse(matcher):  # type: addnodes.compact_paragraph
             write_toc(node, chapters)
 
-        # Index
+        # Index keywords
         functions = etree.SubElement(root, 'functions')
-        index = IndexEntries(self.env).create_index(self)
-
-        def write_index(title, refs, subitems):
-            # type: (str, List[Any], Any) -> None
-            if len(refs) == 0:
-                pass
-            elif len(refs) == 1:
-                etree.SubElement(functions, 'function',
-                                 name=title, link=refs[0][1])
-            else:
-                for i, ref in enumerate(refs):
-                    etree.SubElement(functions, 'function',
-                                     name="[%d] %s" % (i, title),
-                                     link=ref[1])
-
-            if subitems:
-                parent_title = re.sub(r'\s*\(.*\)\s*$', '', title)
-                for subitem in subitems:
-                    write_index("%s %s" % (parent_title, subitem[0]),
-                                subitem[1], [])
-
-        for (key, group) in index:
-            for title, (refs, subitems, key) in group:
-                write_index(title, refs, subitems)
+        if self.domain_indices:
+            for domain_name in sorted(self.env.domains):
+                for domain_data in self.env.domains[domain_name].get_objects():
+                    name, _, _type, docname, anchor, _ = domain_data
+                    link = '{docname}.html#{anchor}'.format(docname=docname,
+                                                            anchor=anchor)
+                    etree.SubElement(functions, 'keyword',
+                                     name=name, link=link, type=_type)
 
         # Dump the XML file
-        xmlfile = path.join(outdir, outname + '.devhelp.gz')
-        with gzip.open(xmlfile, 'w') as f:
-            tree.write(f, 'utf-8')
+        xmlfile = path.join(outdir, outname + '.devhelp2')
+        with codecs.open(xmlfile, 'a', 'utf-8') as f:
+            xmlheader = '<?xml version="1.0" encoding="utf-8" standalone="no"?>'
+            xmltree = (etree.tostring(tree.getroot(), method='xml')).decode('utf-8')
+            xmlbody = xmlheader + xmltree
+            f.write(xmlbody)
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
