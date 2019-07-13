@@ -10,7 +10,6 @@
     :license: BSD, see LICENSE for details.
 """
 
-import codecs
 from os import path
 from typing import Any, Dict
 
@@ -77,7 +76,6 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
 
         # Basic info
 
-        # TODO: author attrib
         # TODO: language attrib
         root = etree.Element('book',
                              xmlns='http://www.devhelp.net/book',
@@ -86,7 +84,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
                              link="index.html",
                              version=self.config.version,
                              language='',
-                             author='')
+                             author=self.config.author)
         tree = etree.ElementTree(root)
 
         # TOC
@@ -126,7 +124,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
 
         # Dump the XML file
         xmlfile = path.join(outdir, outname + '.devhelp2')
-        with codecs.open(xmlfile, 'a', 'utf-8') as f:
+        with open(xmlfile, 'a') as f:
             xmlheader = '<?xml version="1.0" encoding="utf-8" standalone="no"?>'
             xmltree = (etree.tostring(tree.getroot(), method='xml')).decode('utf-8')
             xmlbody = xmlheader + xmltree

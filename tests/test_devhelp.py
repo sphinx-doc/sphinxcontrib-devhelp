@@ -16,7 +16,7 @@ import pytest
 def test_devhelp_basic(app):
     app.builder.build_all()
     output_file = app.config.devhelp_basename + '.devhelp2'
-    result = (app.outdir / output_file).text(encoding='utf-8')
+    result = (app.outdir / output_file).text()
 
     assert '<?xml version="1.0" encoding="utf-8" standalone="no"?>' in result
     assert '<book' in result
@@ -28,7 +28,7 @@ def test_devhelp_basic(app):
 def test_devhelp_index(app):
     app.builder.build_all()
     output_file = app.config.devhelp_basename + '.devhelp2'
-    result = (app.outdir / output_file).text(encoding='utf-8')
+    result = (app.outdir / output_file).text()
 
     index = ElementTree.fromstring(result)
 
@@ -36,16 +36,11 @@ def test_devhelp_index(app):
 
     sub_element = chapters[0]
     assert sub_element.tag == '{http://www.devhelp.net/book}sub'
-    assert 'name' in sub_element.keys() and sub_element.attrib['name'] == 'foo'
-    assert 'link' in sub_element.keys() and \
-           sub_element.attrib['link'] == 'foo.html'
-    assert 'link' in sub_element.keys()
+    assert sub_element.attrib['name'] == 'foo'
+    assert sub_element.attrib['link'] == 'foo.html'
 
     keyword_element = functions[0]
     assert keyword_element.tag == '{http://www.devhelp.net/book}keyword'
-    assert 'name' in keyword_element.keys() and \
-           keyword_element.get('name') == 'sphinx'
-    assert 'link' in keyword_element.keys() and \
-           keyword_element.get('link') == 'index.html#module-sphinx'
-    assert 'type' in keyword_element.keys() and \
-           keyword_element.get('type') == 'module'
+    assert keyword_element.get('name') == 'sphinx'
+    assert keyword_element.get('link') == 'index.html#module-sphinx'
+    assert keyword_element.get('type') == 'module'
