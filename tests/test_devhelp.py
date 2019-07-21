@@ -31,6 +31,7 @@ def test_devhelp_index(app):
     result = (app.outdir / output_file).text()
 
     index = ElementTree.fromstring(result)
+    assert index.attrib['language'] == 'unknown'
 
     chapters, functions = index.getchildren()
 

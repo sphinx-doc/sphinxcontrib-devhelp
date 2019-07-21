@@ -75,16 +75,15 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         logger.info(__('dumping devhelp index...'))
 
         # Basic info
-
-        # TODO: language attrib
         root = etree.Element('book',
                              xmlns='http://www.devhelp.net/book',
                              title=self.config.html_title,
                              name=self.config.project,
                              link="index.html",
                              version=self.config.version,
-                             language='',
+                             language=self.config.devhelp_language,
                              author=self.config.author)
+
         tree = etree.ElementTree(root)
 
         # TOC
@@ -137,6 +136,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_message_catalog(__name__, path.join(package_dir, 'locales'))
 
     app.add_config_value('devhelp_basename', lambda self: make_filename(self.project), None)
+    app.add_config_value('devhelp_language', 'unknown', 'html')
 
     return {
         'version': __version__,
