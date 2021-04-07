@@ -9,8 +9,11 @@ sphinxcontrib-devhelp is a sphinx extension which outputs Devhelp document.
 extras_require = {
     'test': [
         'pytest',
+    ],
+    'lint': [
         'flake8',
         'mypy',
+        'docutils-stubs',
     ],
 }
 
@@ -35,7 +38,7 @@ setup(
     license='BSD',
     author='Georg Brandl',
     author_email='georg@python.org',
-    description=long_desc,
+    description=long_desc.strip().replace('\n', ' '),
     long_description=long_desc,
     zip_safe=False,
     classifiers=[
