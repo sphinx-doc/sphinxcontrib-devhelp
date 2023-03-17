@@ -25,8 +25,6 @@ from sphinx.util import logging
 from sphinx.util.nodes import NodeMatcher
 from sphinx.util.osutil import make_filename
 
-from sphinxcontrib.devhelp.version import __version__
-
 try:
     import xml.etree.ElementTree as etree
 except ImportError:
@@ -37,6 +35,8 @@ if False:
     # For type annotation
     from typing import List  # NOQA
 
+__version__ = '1.0.3'
+__version_info__ = (1, 0, 3)
 
 logger = logging.getLogger(__name__)
 __ = get_translation(__name__, 'console')
