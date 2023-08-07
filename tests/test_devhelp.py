@@ -1,12 +1,4 @@
-"""
-    test_devhelp
-    ~~~~~~~~~~~~
-
-    Test for devhelp extension.
-
-    :copyright: Copyright 2007-2019 by the Sphinx team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
-"""
+"""Test for devhelp extension."""
 
 import pytest
 

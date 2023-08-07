@@ -1,13 +1,6 @@
-"""
-    sphinxcontrib.devhelp
-    ~~~~~~~~~~~~~~~~~~~~~
+"""Build HTML documentation and Devhelp_ support files.
 
-    Build HTML documentation and Devhelp_ support files.
-
-    .. _Devhelp: https://wiki.gnome.org/Apps/Devhelp
-
-    :copyright: Copyright 2007-2019 by the Sphinx team, see README.
-    :license: BSD, see LICENSE for details.
+.. _Devhelp: https://wiki.gnome.org/Apps/Devhelp
 """
 
 from __future__ import annotations
