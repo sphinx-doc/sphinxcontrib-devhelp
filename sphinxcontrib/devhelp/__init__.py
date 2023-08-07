@@ -13,7 +13,7 @@
 import gzip
 import re
 from os import path
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
 from docutils import nodes
 from sphinx import addnodes
@@ -31,8 +31,9 @@ except ImportError:
     import lxml.etree as etree  # type: ignore
 
 
-if False:
+if TYPE_CHECKING:
     # For type annotation
+    from pathlib import Path
     from typing import List  # NOQA
 
 __version__ = '1.0.3'
@@ -74,7 +75,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         self.build_devhelp(self.outdir, self.config.devhelp_basename)
 
     def build_devhelp(self, outdir, outname):
-        # type: (str, str) -> None
+        # type: (Path, str) -> None
         logger.info(__('dumping devhelp index...'))
 
         # Basic info
