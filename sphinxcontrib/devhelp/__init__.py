@@ -10,10 +10,12 @@
     :license: BSD, see LICENSE for details.
 """
 
+from __future__ import annotations
+
 import gzip
 import re
 from os import path
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from docutils import nodes
 from sphinx import addnodes
@@ -30,11 +32,8 @@ try:
 except ImportError:
     import lxml.etree as etree  # type: ignore
 
-
 if TYPE_CHECKING:
-    # For type annotation
     from pathlib import Path
-    from typing import List  # NOQA
 
 __version__ = '1.0.3'
 __version_info__ = (1, 0, 3)
@@ -64,18 +63,15 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
     # don't add sidebar etc.
     embedded = True
 
-    def init(self):
-        # type: () -> None
+    def init(self) -> None:
         super().init()
         self.out_suffix = '.html'
         self.link_suffix = '.html'
 
-    def handle_finish(self):
-        # type: () -> None
+    def handle_finish(self) -> None:
         self.build_devhelp(self.outdir, self.config.devhelp_basename)
 
-    def build_devhelp(self, outdir, outname):
-        # type: (Path, str) -> None
+    def build_devhelp(self, outdir: Path, outname: str) -> None:
         logger.info(__('dumping devhelp index...'))
 
         # Basic info
@@ -92,8 +88,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         tocdoc = self.env.get_and_resolve_doctree(
             self.config.master_doc, self, prune_toctrees=False)
 
-        def write_toc(node, parent):
-            # type: (nodes.Node, etree.Element) -> None
+        def write_toc(node: nodes.Node, parent: etree.Element) -> None:
             if isinstance(node, addnodes.compact_paragraph) or \
                isinstance(node, nodes.bullet_list):
                 for subnode in node:
@@ -114,8 +109,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         functions = etree.SubElement(root, 'functions')
         index = IndexEntries(self.env).create_index(self)
 
-        def write_index(title, refs, subitems):
-            # type: (str, List[Any], Any) -> None
+        def write_index(title: str, refs: list[Any], subitems: Any) -> None:
             if len(refs) == 0:
                 pass
             elif len(refs) == 1:
@@ -143,7 +137,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
             tree.write(f, 'utf-8')  # type: ignore
 
 
-def setup(app: Sphinx) -> Dict[str, Any]:
+def setup(app: Sphinx) -> dict[str, Any]:
     app.setup_extension('sphinx.builders.html')
     app.add_builder(DevhelpBuilder)
     app.add_message_catalog(__name__, path.join(package_dir, 'locales'))
