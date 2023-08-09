@@ -28,8 +28,8 @@ except ImportError:
 if TYPE_CHECKING:
     from pathlib import Path
 
-__version__ = '1.0.3'
-__version_info__ = (1, 0, 3)
+__version__ = '1.0.4'
+__version_info__ = (1, 0, 4)
 
 logger = logging.getLogger(__name__)
 __ = get_translation(__name__, 'console')
