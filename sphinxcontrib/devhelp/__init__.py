@@ -6,9 +6,10 @@
 from __future__ import annotations
 
 import gzip
+import os
 import re
 from os import path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from docutils import nodes
 from sphinx import addnodes
@@ -24,9 +25,6 @@ try:
     import xml.etree.ElementTree as etree
 except ImportError:
     import lxml.etree as etree  # type: ignore
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 __version__ = '1.0.4'
 __version_info__ = (1, 0, 4)
@@ -64,7 +62,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
     def handle_finish(self) -> None:
         self.build_devhelp(self.outdir, self.config.devhelp_basename)
 
-    def build_devhelp(self, outdir: Path, outname: str) -> None:
+    def build_devhelp(self, outdir: str | os.PathLike[str], outname: str) -> None:
         logger.info(__('dumping devhelp index...'))
 
         # Basic info
