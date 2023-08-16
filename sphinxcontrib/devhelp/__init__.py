@@ -93,7 +93,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
                 parent.attrib['name'] = node.astext()
 
         matcher = NodeMatcher(addnodes.compact_paragraph, toctree=Any)
-        for node in tocdoc.traverse(matcher):  # type: addnodes.compact_paragraph
+        for node in tocdoc.findall(matcher):  # type: addnodes.compact_paragraph
             write_toc(node, chapters)
 
         # Index
