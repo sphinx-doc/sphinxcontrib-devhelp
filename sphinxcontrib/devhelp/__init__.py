@@ -26,8 +26,8 @@ try:
 except ImportError:
     import lxml.etree as etree  # type: ignore
 
-__version__ = '1.0.5'
-__version_info__ = (1, 0, 5)
+__version__ = '1.0.6'
+__version_info__ = (1, 0, 6)
 
 logger = logging.getLogger(__name__)
 __ = get_translation(__name__, 'console')
