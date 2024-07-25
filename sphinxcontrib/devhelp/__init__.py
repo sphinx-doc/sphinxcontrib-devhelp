@@ -118,8 +118,8 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
                     write_index("%s %s" % (parent_title, subitem[0]),
                                 subitem[1], [])
 
-        for (key, group) in index:
-            for title, (refs, subitems, key) in group:
+        for (_group_key, group) in index:
+            for title, (refs, subitems, _category_key) in group:
                 write_index(title, refs, subitems)
 
         # Dump the XML file
