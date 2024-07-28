@@ -9,11 +9,10 @@ import gzip
 import os
 import re
 from os import path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from docutils import nodes
 from sphinx import addnodes
-from sphinx.application import Sphinx
 from sphinx.builders.html import StandaloneHTMLBuilder
 from sphinx.environment.adapters.indexentries import IndexEntries
 from sphinx.locale import get_translation
@@ -21,10 +20,10 @@ from sphinx.util import logging
 from sphinx.util.nodes import NodeMatcher
 from sphinx.util.osutil import make_filename
 
-try:
-    import xml.etree.ElementTree as etree
-except ImportError:
-    import lxml.etree as etree  # type: ignore
+if TYPE_CHECKING:
+    from sphinx.application import Sphinx
+
+import xml.etree.ElementTree as etree
 
 __version__ = '1.0.6'
 __version_info__ = (1, 0, 6)
@@ -80,8 +79,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
             self.config.master_doc, self, prune_toctrees=False)
 
         def write_toc(node: nodes.Node, parent: etree.Element) -> None:
-            if isinstance(node, addnodes.compact_paragraph) or \
-               isinstance(node, nodes.bullet_list):
+            if isinstance(node, (addnodes.compact_paragraph, nodes.bullet_list)):
                 for subnode in node:
                     write_toc(subnode, parent)
             elif isinstance(node, nodes.list_item):
@@ -93,7 +91,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
                 parent.attrib['name'] = node.astext()
 
         matcher = NodeMatcher(addnodes.compact_paragraph, toctree=Any)
-        for node in tocdoc.findall(matcher):  # type: addnodes.compact_paragraph
+        for node in tocdoc.findall(matcher):
             write_toc(node, chapters)
 
         # Index
@@ -115,7 +113,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
             if subitems:
                 parent_title = re.sub(r'\s*\(.*\)\s*$', '', title)
                 for subitem in subitems:
-                    write_index("%s %s" % (parent_title, subitem[0]),
+                    write_index(f'{parent_title} {subitem[0]}',
                                 subitem[1], [])
 
         for (_group_key, group) in index:
@@ -125,7 +123,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         # Dump the XML file
         xmlfile = path.join(outdir, outname + '.devhelp.gz')
         with gzip.GzipFile(filename=xmlfile, mode='w', mtime=0) as f:
-            tree.write(f, 'utf-8')  # type: ignore
+            tree.write(f, 'utf-8')
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
