@@ -64,7 +64,7 @@ name = "sphinxcontrib.devhelp"
 
 [tool.flit.sdist]
 include = [
-    "CHANGES",
+    "CHANGES.rst",
     "LICENSE",
     # Tests
     "tests/",
