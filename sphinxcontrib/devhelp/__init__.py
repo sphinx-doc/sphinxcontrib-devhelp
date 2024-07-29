@@ -25,8 +25,8 @@ if TYPE_CHECKING:
 
 import xml.etree.ElementTree as etree
 
-__version__ = '1.0.6'
-__version_info__ = (1, 0, 6)
+__version__ = '2.0.0'
+__version_info__ = (2, 0, 0)
 
 logger = logging.getLogger(__name__)
 __ = get_translation(__name__, 'console')

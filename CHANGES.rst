@@ -1,3 +1,11 @@
+Release 2.0.0 (2024-07-28)
+==========================
+
+* Adopt Ruff
+* Tighten MyPy settings
+* Update GitHub actions versions
+* Avoid storing build time in gzip headers
+
 Release 1.0.6 (2024-01-13)
 ==========================
 
