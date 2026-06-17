@@ -46,7 +46,7 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
 
     # don't copy the reST source
     copysource = False
-    supported_image_types = ['image/png', 'image/gif', 'image/jpeg']
+    supported_image_types = ['image/svg+xml', 'image/png', 'image/gif', 'image/jpeg']
 
     # don't add links
     add_permalinks = False
