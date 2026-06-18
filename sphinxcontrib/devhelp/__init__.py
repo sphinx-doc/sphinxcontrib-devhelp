@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-import gzip
 import os
 import re
 from os import path
@@ -65,11 +64,15 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
         logger.info(__('dumping devhelp index...'))
 
         # Basic info
-        root = etree.Element('book',
-                             title=self.config.html_title,
-                             name=self.config.project,
-                             link="index.html",
-                             version=self.config.version)
+        root = etree.Element('book')
+        root.set("xmlns", "http://www.devhelp.net/book")
+        root.set("title", self.config.html_title)
+        root.set("link", "index.html")
+        root.set("author", self.config.author)
+        root.set("name", self.config.project)
+        root.set("version", "2")
+        if self.config.html_baseurl:
+            root.set("online", self.config.html_baseurl)
         tree = etree.ElementTree(root)
 
         # TOC
@@ -102,11 +105,11 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
             if len(refs) == 0:
                 pass
             elif len(refs) == 1:
-                etree.SubElement(functions, 'function',
+                etree.SubElement(functions, 'keyword', type='function',
                                  name=title, link=refs[0][1])
             else:
                 for i, ref in enumerate(refs):
-                    etree.SubElement(functions, 'function',
+                    etree.SubElement(functions, 'keyword', type='function',
                                      name="[%d] %s" % (i, title),
                                      link=ref[1])
 
@@ -121,9 +124,8 @@ class DevhelpBuilder(StandaloneHTMLBuilder):
                 write_index(title, refs, subitems)
 
         # Dump the XML file
-        xmlfile = path.join(outdir, outname + '.devhelp.gz')
-        with gzip.GzipFile(filename=xmlfile, mode='w', mtime=0) as f:
-            tree.write(f, 'utf-8')
+        xmlfile = path.join(outdir, outname + '.devhelp2')
+        tree.write(xmlfile, encoding="UTF-8")
 
 
 def setup(app: Sphinx) -> dict[str, Any]:

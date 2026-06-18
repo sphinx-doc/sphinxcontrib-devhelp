@@ -18,7 +18,7 @@ def test_basic(app: Sphinx) -> None:
 
 @pytest.mark.sphinx('devhelp', testroot='basic', freshenv=True)
 def test_basic_deterministic_build(app: Sphinx) -> None:
-    app.config.devhelp_basename, output_filename = 'testing', 'testing.devhelp.gz'
+    app.config.devhelp_basename, output_filename = 'testing', 'testing.devhelp2'
 
     app.builder.build_all()
     output_initial = (app.outdir / output_filename).read_bytes()
